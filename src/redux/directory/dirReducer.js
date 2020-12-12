@@ -1,6 +1,8 @@
 import { SECTIONS_DATA } from './sections.data';
 
-const initialState = { SECTIONS_DATA }
+const initialState = { 
+	sections: SECTIONS_DATA 
+};
 
 const dirReducer = (state=initialState, action) => {
 	switch(action.type){
