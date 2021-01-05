@@ -13,6 +13,7 @@ import CheckoutPage from './pages/checkout/CheckoutPage';
 import { setUser } from './redux/user/user-actions';
 import { auth, createUserProfileDocument } from './firebase/firebase-util';
 import { selectCurrentUser } from './redux/user/user-selectors';
+// import { selectCollectionForPreview} from './redux/shop/shop-selector';
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser
@@ -37,9 +38,9 @@ class App extends Component {
             ...snapShot.data()
           });
         });
-      } else {
+      } 
         setCurrentUser(userAuth)
-      }
+        // addCollectionAndDocs('collections', collectionArray.map(({ title, items }) => ({ title, items })));
     });
   }
 

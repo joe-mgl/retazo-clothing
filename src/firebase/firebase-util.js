@@ -40,6 +40,68 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 	return userRef;
 }
 
+// to add collections to firebase
+
+export const addCollectionAndDocs = async (collectionKey, objectsToAdd) => {
+	const collectionRef = firestore.collection(collectionKey);
+
+	const batch = firestore.batch();
+	objectsToAdd.forEach(object => {
+		const newDocRef = collectionRef.doc();
+		batch.set(newDocRef, object);
+	});
+
+	return await batch.commit();
+};
+
+// to be used in ShopPage.js
+
+export const convertCollectionsSnapshotToMap = collectionsSnapshot => {
+	const transformedCollection = collectionsSnapshot.docs.map( docSnapshot => {
+		const { title, items } = docSnapshot.data();
+		return {
+			routeName: encodeURI(title.toLowerCase()),
+			id: docSnapshot.id,
+			title,
+			items
+		}
+	});
+
+	return transformedCollection.reduce((acc, collection) => {
+		acc[collection.title.toLowerCase()] = collection;
+		return acc;
+	}, {});
+};
+
+export const auth = firebase.auth();
+export const firestore = firebase.firestore();
+
+
+// Google authentication utility
+const provider = new firebase.auth.GoogleAuthProvider();
+provider.setCustomParameters({ prompt: 'select_account' });
+export const signInWithGoogle = () => auth.signInWithPopup(provider);
+
+export default firebase;
+
+
+// export const addCollectionAndDocs = async (collectionKey, objectsToAdd) => {
+// 	const collectionRef = firestore.collection(collectionKey);
+
+// 	const batch = firestore.batch();
+// 	objectsToAdd.forEach(object => {
+// 		const newDocRef = collectionRef.doc();
+// 		batch.set(newDocRef, object);
+// 	});
+
+// 	return await batch.commit();
+// }
+
+
+
+
+
+
 // export const createUserProfileDoc = async (userAuth, additionalData) => {
 // 	if (!userAuth) return;
 
@@ -63,18 +125,3 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 // 		}
 // 	}
 // }
-
-
-
-
-export const auth = firebase.auth();
-export const firestore = firebase.firestore();
-
-
-// Google authentication utility
-const provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({ prompt: 'select_account' });
-export const signInWithGoogle = () => auth.signInWithPopup(provider);
-
-export default firebase;
-
